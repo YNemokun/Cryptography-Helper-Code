@@ -1,0 +1,95 @@
+import matplotlib.pyplot as plt
+
+"""
+A few methods that analyze a set of frequencies of a piece of text based on the letters in its key.
+This is useful for Vigenere Square ciphers
+Author: Angela Yang
+Date: 1/9/2023
+"""
+
+
+"""
+Returns bar graphs for the frequencies of each letter in the key
+"""
+
+
+def barGraph(filename, key):
+
+    return graph(getFrequency(transcript(filename), key))
+
+
+"""
+Reads the file, transfers it into a string and filters it to contain no new lines and only capitalized characters
+"""
+
+
+def transcript(filename):
+    with open(filename, 'r') as file:
+        text = file.read().replace('\n', '')
+    newText = ''
+    return newText.join(i.upper() for i in text if i.isalpha())
+
+
+"""
+Returns a list of frequencies based on key length
+"""
+
+
+def getFrequency(text, key_length):
+    # marks the letter of the key we are on
+    turn = 0
+    allFrequencies = []
+    while key_length > turn:
+        singleFrequency = {'A': 0, 'B': 0, 'C': 0, 'D': 0, 'E': 0, 'F': 0,
+                           'G': 0, 'H': 0, 'I': 0, 'J': 0, 'K': 0, 'L': 0, 'M': 0, 'N': 0,
+                           'O': 0, 'P': 0, 'Q': 0, 'R': 0, 'S': 0, 'T': 0, 'U': 0, 'V': 0,
+                           'W': 0, 'X': 0, 'Y': 0, 'Z': 0}
+        # skips to every letter that is encrypted with this letter's alphabet
+        # [start:stop:step] -- [turn:end:keylength]
+        for i in text[turn::key_length]:
+            # adds one to its count
+            singleFrequency[i] += 1
+        # adds to the list of frequencies
+        allFrequencies.append(singleFrequency)
+        # goes to the next letter
+        turn += 1
+    return allFrequencies
+
+
+"""
+Draws a histogram for a list of frequencies
+"""
+
+
+def graph(freq_list):
+    fig, axes = plt.subplots(1, len(freq_list), figsize=(10, 5))
+    for i in range(len(freq_list)):
+        axes[i].barh(list(freq_list[i].keys()), list(freq_list[i].values()))
+        axes[i].set_title(i+1)
+        axes[i].invert_yaxis()
+    plt.show()
+
+
+"""
+Test runs
+"""
+
+# # for transcript(text)
+# plainText = "cipher.txt"
+# upperText = transcript(plainText)
+# print(upperText)
+#
+#
+# # for getFrequencies
+# key = 2
+# freq = getFrequency(upperText, key)
+#
+# # for graph
+# graph(freq)
+
+
+"""
+Full run
+"""
+
+barGraph('cipher.txt', 4)
